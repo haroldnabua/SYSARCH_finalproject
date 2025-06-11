@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Subject</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .navbar {
+      background: #000;
+      color: #fff;
+      padding: 10px 0;
+    }
+    .navbar .nav {
+      background: #888;
+      color: #fff;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .navbar .nav .links {
+      display: flex;
+      gap: 20px;
+    }
+    .container {
+      display: flex;
+      margin: 20px auto;
+      width: 1000px;
+      border: 1px solid #aaa;
+      min-height: 500px;
+      background: #fafafa;
+    }
+    .subject-list-section {
+      flex: 2;
+      padding: 20px;
+      border-right: 1px solid #aaa;
+    }
+    .subject-info-bar {
+      margin-bottom: 10px;
+      font-size: 1rem;
+      display: flex;
+      gap: 30px;
+      align-items: center;
+    }
+    .subject-info-bar span {
+      font-weight: 500;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: #fff;
+    }
+    th, td {
+      border-bottom: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th { font-weight: bold; }
+    .action-btn {
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 5px;
+      cursor: pointer;
+      background: #ff4136;
+    }
+    .action-btn svg {
+      display: block;
+    }
+    .student-list-section .note {
+      font-size: 0.95rem;
+      color: #222;
+    }
+    .student-list-section .note b {
+      font-weight: bold;
+    }
+    .student-detail-section {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #fff;
+    }
+    .note{
+        margin-top: 400px;
+    }
+    .search-box {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      border: 1px solid #222;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      padding: 4px 8px;
+      background: #fafafa;
+    }
+    .search-box input {
+      border: none;
+      outline: none;
+      flex: 1;
+      font-size: 1rem;
+      background: transparent;
+      padding: 6px 0;
+    }
+    .search-box svg {
+      width: 22px;
+      height: 22px;
+      color: #222;
+      margin-left: 4px;
+    }
+    .profile-pic {
+      width: 100px;
+      height: 100px;
+      border: 1px solid #aaa;
+      border-radius: 50%;
+      margin: 20px 0 20px 0;
+      background: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .student-info-list {
+      width: 100%;
+      margin-bottom: 30px;
+      font-size: 1rem;
+    }
+    .student-info-list tr td:first-child {
+      font-weight: bold;
+      padding-right: 10px;
+      text-align: right;
+      width: 90px;
+    }
+    .enroll-btn {
+      width: 100%;
+      background: #3a47e7;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 16px 0;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      transition: background 0.2s;
+    }
+    .enroll-btn:hover {
+      background: #2a3db8;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="nav">
+      <span class="title"><b>student</b></span>
+      <div class="links">
+        <a href="/dashboard" style="color:#fff;text-decoration:none;">REGISTER</a>
+        <a href="/subject" style="color:#fff;text-decoration:none;font-weight:bold;">SUBJECT</a>
+        <a href="/grades" style="color:#fff;text-decoration:none;">GRADES</a>
+      </div>
+      <span><a href="/logout" style="color:#fff;text-decoration:none;">LOGOUT</a></span>
+    </div>
+  </div>
+  <div class="container">
+    <div class="subject-list-section">
+      <div class="subject-info-bar">
+        <span>SUBJECT : <b>02345</b></span>
+        <span>SYSAD 31</span>
+        <span>1:30-3:00 TTH</span>
+        <span>526</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>IDNO</th>
+            <th>LASTNAME</th>
+            <th>FIRSTNAME</th>
+            <th>COURSE</th>
+            <th>LEVEL</th>
+            <th>ACTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1.</td>
+            <td><a href="#" style="color:#222;text-decoration:underline;">1000</a></td>
+            <td>DURANO</td>
+            <td>DENNIS</td>
+            <td>BSCPE</td>
+            <td>4</td>
+            <td>
+              <span class="action-btn" title="Delete">
+                <!-- Trash Can Icon -->
+                <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  <line x1="10" y1="11" x2="10" y2="17"/>
+                  <line x1="14" y1="11" x2="14" y2="17"/>
+                </svg>
+              </span>
+            </td>
+          </tr>
+          <!-- More students can be added here -->
+        </tbody>
+      </table>
+      <div class="note">
+        <b>NOTE :</b> To assign grade, click on the student ID number.
+      </div>
+    </div>
+    <div class="student-detail-section">
+      <form class="search-box" method="GET" action="#">
+        <input type="text" name="search" placeholder="STUDENT IDNO">
+        <button type="submit" style="background:none;border:none;padding:0;cursor:pointer;">
+          <svg fill="none" stroke="#222" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </button>
+      </form>
+      <div class="profile-pic">
+        <!-- Placeholder for profile image -->
+        <svg width="60" height="60">
+          <circle cx="30" cy="22" r="18" fill="#bbb"/>
+          <ellipse cx="30" cy="48" rx="22" ry="12" fill="#bbb"/>
+        </svg>
+      </div>
+      <table class="student-info-list">
+        <tr><td>IDNO</td><td>: 1000</td></tr>
+        <tr><td>LASTNAME</td><td>: DURANO</td></tr>
+        <tr><td>FIRSTNAME</td><td>: DENNIS</td></tr>
+        <tr><td>COURSE</td><td>: BSCPE</td></tr>
+        <tr><td>LEVEL</td><td>: 4</td></tr>
+      </table>
+      <button class="enroll-btn">ENROLL</button>
+    </div>
+  </div>
+</body>
+</html>
