@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Subject</title>
+  <title>Grades</title>
   <style>
     body { font-family: Arial, sans-serif; }
     .navbar {
@@ -30,7 +30,7 @@
       min-height: 500px;
       background: #fafafa;
     }
-    .subject-list-section {
+    .student-list-section {
       flex: 2;
       padding: 20px;
       border-right: 1px solid #aaa;
@@ -70,11 +70,12 @@
     .action-btn svg {
       display: block;
     }
-    .student-list-section .note {
-      font-size: 0.95rem;
-      color: #222;
+    .note{
+        margin-top: 40px;
+        font-size: 0.95rem;
+        color: #222;
     }
-    .student-list-section .note b {
+    .note b {
       font-weight: bold;
     }
     .student-detail-section {
@@ -84,9 +85,6 @@
       flex-direction: column;
       align-items: center;
       background: #fff;
-    }
-    .note{
-        margin-top: 400px;
     }
     .search-box {
       width: 100%;
@@ -125,7 +123,7 @@
     }
     .student-info-list {
       width: 100%;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       font-size: 1rem;
     }
     .student-info-list tr td:first-child {
@@ -134,21 +132,49 @@
       text-align: right;
       width: 90px;
     }
-    .enroll-btn {
+    .grade-input {
       width: 100%;
+      margin-bottom: 10px;
+      padding: 8px;
+      font-size: 1rem;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+      background: #fafafa;
+    }
+    .btn-row {
+      width: 100%;
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .cancel-btn {
+      flex: 1;
+      background: #ff4136;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 12px 0;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .cancel-btn:hover {
+      background: #c9302c;
+    }
+    .save-btn {
+      flex: 1;
       background: #3a47e7;
       color: #fff;
       border: none;
       border-radius: 4px;
-      padding: 16px 0;
+      padding: 12px 0;
       font-size: 1.1rem;
       font-weight: bold;
       cursor: pointer;
-      margin-top: 10px;
-      margin-bottom: 10px;
       transition: background 0.2s;
     }
-    .enroll-btn:hover {
+    .save-btn:hover {
       background: #2a3db8;
     }
   </style>
@@ -156,54 +182,56 @@
 <body>
   <div class="navbar">
     <div class="nav">
-      <span class="title"><a href="/dashboard" style="color:#fff;text-decoration:none;"><b>STUDENT</b></a></span>
+      <span class="title"><b>STUDENT</b></span>
       <div class="links">
         <a href="/dashboard" style="color:#fff;text-decoration:none;">REGISTER</a>
-        <a href="/subject" style="color:#fff;text-decoration:none;font-weight:bold;">SUBJECT</a>
-        <a href="/grades" style="color:#fff;text-decoration:none;">GRADES</a>
+        <a href="/subject" style="color:#fff;text-decoration:none;">SUBJECT</a>
+        <a href="/grades" style="color:#fff;text-decoration:none;font-weight:bold;">GRADES</a>
       </div>
       <span><a href="/logout" style="color:#fff;text-decoration:none;">LOGOUT</a></span>
     </div>
   </div>
   <div class="container">
-    <div class="subject-list-section">
+    <div class="student-list-section">
+      <div class="subject-info-bar">
+        <span>SUBJECT : 02345</span>
+        <span>SYSAD 31</span>
+        <span>1:30-3:00 TTH</span>
+        <span>526</span>
+      </div>
       <table>
         <thead>
           <tr>
-            <th>EDPCODE</th>
-            <th>SUBCODE</th>
-            <th>DESCRIPTIVE TITLE</th>
-            <th>SCHEDULE</th>
-            <th>ROOM</th>
-            <th>UNITS</th>
-            <th>ACTIONS</th>
+            <th>#</th>
+            <th>IDNO</th>
+            <th>LASTNAME</th>
+            <th>FIRSTNAME</th>
+            <th>COURSE</th>
+            <th>PRELIM</th>
+            <th>MIDTERM</th>
+            <th>SEMI-FINAL</th>
+            <th>FINAL</th>
+            <th>FG</th>
           </tr>
         </thead>
         <tbody>
           <tr>
+            <td>1.</td>
             <td><a href="#" style="color:#222;text-decoration:underline;">1000</a></td>
-            <td>SYSADMN32</td>
-            <td>SYSTEM ADMINISTRATION</td>
-            <td>1:30-3:00 TTH</td>
-            <td>526</td>
-            <td>4.0</td>
-            <td>
-              <span class="action-btn" title="Delete">
-                <!-- Trash Can Icon -->
-                <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
-                  <polyline points="3 6 5 6 21 6"/>
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                  <line x1="10" y1="11" x2="10" y2="17"/>
-                  <line x1="14" y1="11" x2="14" y2="17"/>
-                </svg>
-              </span>
-            </td>
+            <td>DURANO</td>
+            <td>DENNIS</td>
+            <td>BSCPE</td>
+            <td>1.5</td>
+            <td>1.8</td>
+            <td>1.7</td>
+            <td>1.6</td>
+            <td><b>1.7</b></td>
           </tr>
           <!-- More students can be added here -->
         </tbody>
       </table>
       <div class="note">
-        <b>NOTE :</b> To assign grade, click on the student ID number.
+        <b>NOTE:</b> CLICK ON STUDENT IDNO TO EDIT GRADE
       </div>
     </div>
     <div class="student-detail-section">
@@ -228,10 +256,19 @@
         <tr><td>LASTNAME</td><td>: DURANO</td></tr>
         <tr><td>FIRSTNAME</td><td>: DENNIS</td></tr>
         <tr><td>COURSE</td><td>: BSCPE</td></tr>
-        <tr><td>LEVEL</td><td>: 4</td></tr>
+        <tr><td>LEVEL</td><td>: LEVEL 4</td></tr>
       </table>
-      <button class="enroll-btn">ENROLL</button>
+      <form style="width:100%;">
+        <input class="grade-input" type="text" name="prelim" placeholder="PRELIM">
+        <input class="grade-input" type="text" name="midterm" placeholder="MIDTERM">
+        <input class="grade-input" type="text" name="semifinal" placeholder="SEMI-FINAL">
+        <input class="grade-input" type="text" name="final" placeholder="FINAL">
+        <div class="btn-row">
+          <button type="button" class="cancel-btn">CANCEL</button>
+          <button type="submit" class="save-btn">SAVE</button>
+        </div>
+      </form>
     </div>
   </div>
 </body>
-</html>
+</html> 

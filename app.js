@@ -3,6 +3,7 @@ const config = require("./config");
 const students = require("./api/students");
 const courses = require("./api/courses");
 const path = require('path');
+const axios = require('axios');
 
 const port = config.port || 4321;
 
@@ -35,13 +36,30 @@ app.post('/login', (req, res) => {
   }
 });
 
-app.get('/dashboard', (req, res) => {
+app.get('/dashboard', async (req, res) => {
   // Fetch students from your database here
-  const students = [
-    { idno: 1000, lastname: 'durano', firstname: 'dennis', course: 'bscpe', level: 4 }
-    // ... more students
-  ];
-  res.render('dashboard', { students });
+  try {
+    const response = await axios.get(`http://localhost:${port}/api/students`);
+    const students = response.data;
+    res.render('dashboard', { students });
+  } catch (err) {
+    res.render('dashboard', { students: [] });
+  }
+});
+
+app.post('/dashboard', async (req, res) => {
+  // Add a new student to the database
+  try {
+    const response = await axios.post(`http://localhost:${port}/api/students`, req.body);
+    if (response.status === 200) {
+      res.redirect('/dashboard');
+    } else {
+      res.status(500).send('Failed to add student');
+    }
+  } catch (err) {
+    console.error('Error adding student:', err);
+    res.status(500).send('Failed to add student');
+  }
 });
 
 app.get('/subject', (req, res) => {

@@ -4,111 +4,137 @@
   <meta charset="UTF-8">
   <title>Student Dashboard</title>
   <style>
-    /* Add your CSS here for styling */
-    body { font-family: Arial, sans-serif; }
-    .navbar {
-      background: #000;
-      color: #fff;
-      padding: 10px 0;
-    }
-    .navbar .nav {
-      background: #888;
-      color: #fff;
-      padding: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .navbar .nav .links {
-      display: flex;
-      gap: 20px;
-    }
-    .container {
-      display: flex;
-      margin: 20px auto;
-      width: 900px;
-      border: 1px solid #aaa;
-      min-height: 400px;
-    }
-    .student-list-section {
-      flex: 2;
-      padding: 20px;
-      border-right: 1px solid #aaa;
-    }
-    .student-list-section h3 {
-      margin-top: 0;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      border-bottom: 1px solid #ccc;
-      padding: 8px;
-      text-align: left;
-    }
-    .action-btn {
-      width: 32px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 5px;
-      border-radius: 5px;
-      cursor: pointer;
-      vertical-align: middle;
-    }
-    .action-btn.green { background: #2ecc40; }
-    .action-btn.red { background: #ff4136; }
-    .student-form-section {
-      flex: 1;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .profile-pic {
-      width: 100px;
-      height: 100px;
-      border: 1px solid #aaa;
-      border-radius: 50%;
-      margin-bottom: 20px;
-      background: #eee;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .student-form {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .student-form input, .student-form select {
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-    }
-    .form-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .form-actions .cancel-btn {
-      background: #ff4136;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      cursor: pointer;
-    }
-    .form-actions .save-btn {
-      background: #2a3db8;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      cursor: pointer;
-    }
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+.navbar {
+  background: #000;
+  color: #fff;
+  padding: 10px 0;
+}
+.navbar .nav {
+  background: #888;
+  color: #fff;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.navbar .nav .links {
+  display: flex;
+  gap: 20px;
+}
+.container {
+  display: flex;
+  margin: 20px auto;
+  width: 900px;
+  border: 1px solid #aaa;
+  min-height: 400px;
+}
+.student-list-section {
+  flex: 2;
+  padding: 20px;
+  border-right: 1px solid #aaa;
+}
+.student-list-section h3 {
+  margin-top: 0;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+th, td {
+  border-bottom: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+.action-btn {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.action-btn.green { background: #2ecc40; }
+.action-btn.red { background: #ff4136; }
+
+.student-detail-section {
+  flex: 1;
+  padding: 20px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.student-detail-section form {
+  width: 100%;
+  max-width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-right: 20px;
+}
+
+/* Ensure each form field wrapper div takes its own line */
+.student-detail-section form > div {
+  display: block;
+}
+
+.student-detail-section input,
+.student-detail-section select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  background: #fafafa;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.form-actions button {
+  flex: 1;
+  padding: 10px 0;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.cancel-btn {
+  width: 30%;
+  background: #ff4136;
+  color: white;
+}
+
+.save-btn {
+  width: 50%;
+  background: #2a3db8;
+  color: white;
+  padding: 5px;
+}
   </style>
 </head>
 <body>
@@ -146,26 +172,28 @@
               <td><%= student.course %></td>
               <td><%= student.level %></td>
               <td>
-                <span class="action-btn green" title="Update">
-                  <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M16.5 3.5l4 4L7 21H3v-4L16.5 3.5z"/>
-                  </svg>
-                </span>
-                <span class="action-btn red" title="Delete">
-                  <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
-                    <polyline points="3 6 5 6 21 6"/>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                    <line x1="10" y1="11" x2="10" y2="17"/>
-                    <line x1="14" y1="11" x2="14" y2="17"/>
-                  </svg>
-                </span>
+                <div style="display: flex; gap: 5px;">
+                  <span class="action-btn green" title="Update" data-student="<%= JSON.stringify(student) %>">
+                    <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+                      <path d="M16.5 3.5l4 4L7 21H3v-4L16.5 3.5z"/>
+                    </svg>
+                  </span>
+                  <span class="action-btn red" title="Delete" data-idno="<%= student.idno %>">
+                    <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+                      <polyline points="3 6 5 6 21 6"/>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                      <line x1="10" y1="11" x2="10" y2="17"/>
+                      <line x1="14" y1="11" x2="14" y2="17"/>
+                    </svg>
+                  </span>
+                </div>
               </td>
             </tr>
           <% }) %>
         </tbody>
       </table>
     </div>
-    <div class="student-form-section">
+    <div class="student-detail-section">
       <div class="profile-pic">
         <!-- Placeholder for profile image -->
         <svg width="60" height="60">
@@ -173,32 +201,204 @@
           <ellipse cx="30" cy="48" rx="22" ry="12" fill="#bbb"/>
         </svg>
       </div>
-      <form class="student-form">
-        <input type="text" name="idno" placeholder="IDNO">
-        <input type="text" name="lastname" placeholder="LASTNAME">
-        <input type="text" name="firstname" placeholder="FIRSTNAME">
-        <select name="course">
-          <option value="">BSCPE</option>
-          <option value="">BSIT</option>
-          <option value="">BSCS</option>
-          <option value="">BSCA</option>
-          <option value="">BSED</option>
-          <option value="">BSPE</option>
-          <option value="">BSCRIM</option>
-          <option value="">BSIS</option>
-        </select>
-        <select name="level">
-          <option value="">1</option>
-          <option value="">2</option>
-          <option value="">3</option>
-          <option value="">4</option>
-        </select>
+      <form id="studentForm" method="POST" action="/dashboard">
+        <div><input type="hidden" id="formIdnoHidden" name="original_idno"></div>
+        <div><input type="text" id="idnoInput" name="idno" placeholder="IDNO" required></div>
+        <div><input type="text" id="lastnameInput" name="lastname" placeholder="LASTNAME" required></div>
+        <div><input type="text" id="firstnameInput" name="firstname" placeholder="FIRSTNAME" required></div>
+        <div>
+          <select id="courseSelect" name="course" required>
+            <option value="BSCPE">BSCPE</option>
+            <option value="BSIT">BSIT</option>
+            <option value="BSCS">BSCS</option>
+            <option value="BSCA">BSCA</option>
+            <option value="BSED">BSED</option>
+            <option value="BSPE">BSPE</option>
+            <option value="BSCRIM">BSCRIM</option>
+            <option value="BSIS">BSIS</option>
+          </select>
+        </div>
+        <div>
+          <select id="levelSelect" name="level" required>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        </div>
         <div class="form-actions">
-          <button type="button" class="cancel-btn">CANCEL</button>
-          <button type="submit" class="save-btn">SAVE</button>
+          <button type="button" class="cancel-btn" id="cancelButton">CANCEL</button>
+          <button type="submit" class="save-btn" id="saveButton">SAVE</button>
         </div>
       </form>
     </div>
   </div>
+  <script>
+    const studentForm = document.getElementById('studentForm');
+    const formIdnoHidden = document.getElementById('formIdnoHidden');
+    const idnoInput = document.getElementById('idnoInput');
+    const lastnameInput = document.getElementById('lastnameInput');
+    const firstnameInput = document.getElementById('firstnameInput');
+    const courseSelect = document.getElementById('courseSelect');
+    const levelSelect = document.getElementById('levelSelect');
+    const saveButton = document.getElementById('saveButton');
+    const cancelButton = document.getElementById('cancelButton');
+
+    function clearForm() {
+      formIdnoHidden.value = '';
+      idnoInput.value = '';
+      lastnameInput.value = '';
+      firstnameInput.value = '';
+      courseSelect.value = 'BSCPE'; // Set a default
+      levelSelect.value = '1';     // Set a default
+      saveButton.textContent = 'SAVE';
+      saveButton.type = 'submit';
+      studentForm.action = '/dashboard';
+      saveButton.onclick = null; // Remove onclick handler
+    }
+
+    // Call clearForm on page load to ensure clean state
+    document.addEventListener('DOMContentLoaded', () => {
+      clearForm();
+      attachEventListeners(); // Attach event listeners after DOM is loaded
+    });
+
+    cancelButton.addEventListener('click', clearForm);
+
+    studentForm.addEventListener('submit', function(event) {
+      if (saveButton.textContent === 'SAVE') {
+        event.preventDefault(); // Prevent default form submission
+        console.log('Attempting to save new student...'); // Log 1
+
+        const formData = new FormData(studentForm);
+        const studentData = {};
+        formData.forEach((value, key) => {
+          studentData[key] = value;
+        });
+
+        fetch(studentForm.action, {
+          method: studentForm.method,
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(studentData)
+        })
+        .then(response => {
+          if (response.ok) {
+            console.log('Student saved successfully. Reloading page...'); // Log 2 (success)
+            window.location.reload(); // Reload the page to reflect changes
+          } else {
+            response.text().then(text => {
+              console.error('Server error:', text);
+              alert('Failed to save student: ' + text);
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error during fetch:', error); // Log 4 (fetch error)
+          alert('An error occurred while saving the student: ' + error.message);
+        });
+      }
+      // If saveButton.textContent is 'UPDATE', the onclick handler will take over
+      // and already prevents default, so no need for else block here.
+    });
+
+    function attachEventListeners() {
+      const editButtons = document.querySelectorAll('.action-btn.green');
+      const deleteButtons = document.querySelectorAll('.action-btn.red');
+      console.log('Attaching event listeners...');
+      console.log('Found edit buttons:', editButtons.length);
+      console.log('Found delete buttons:', deleteButtons.length);
+
+      editButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+          const studentData = event.currentTarget.dataset.student;
+          console.log('Edit button clicked. Student data:', studentData);
+          if (studentData) {
+            editStudent(JSON.parse(studentData));
+          }
+        });
+      });
+
+      deleteButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+          const idno = event.currentTarget.dataset.idno;
+          console.log('Delete button clicked. IDNO:', idno);
+          if (idno) {
+            deleteStudent(idno);
+          }
+        });
+      });
+    }
+
+    function deleteStudent(idno) {
+      console.log('Inside deleteStudent for IDNO:', idno);
+      if (confirm('Are you sure you want to delete student with IDNO: ' + idno + '?')) {
+        fetch('/api/students/' + idno, {
+          method: 'DELETE'
+        })
+        .then(response => {
+          if (response.ok) {
+            window.location.reload(); // Reload the page to reflect changes
+          } else {
+            alert('Failed to delete student.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while deleting the student.');
+        });
+      }
+    }
+
+    function editStudent(student) {
+      console.log('Inside editStudent for student:', student);
+      formIdnoHidden.value = student.idno; // Store the original IDNO
+      idnoInput.value = student.idno;
+      lastnameInput.value = student.lastname;
+      firstnameInput.value = student.firstname;
+      courseSelect.value = student.course;
+      levelSelect.value = student.level;
+
+      saveButton.textContent = 'UPDATE';
+      saveButton.type = 'button'; // Prevent default form submission
+      
+      saveButton.onclick = function() {
+        // Collect updated data
+        const updatedStudent = {
+          original_idno: formIdnoHidden.value, // Send original ID for WHERE clause
+          idno: idnoInput.value,
+          lastname: lastnameInput.value,
+          firstname: firstnameInput.value,
+          course: courseSelect.value,
+          level: levelSelect.value
+        };
+
+        fetch('/api/students', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(updatedStudent)
+        })
+        .then(response => {
+          if (response.ok) {
+            window.location.reload(); // Reload the page to reflect changes
+          } else {
+            response.text().then(text => {
+              console.error('Server error:', text);
+              alert('Failed to update student: ' + text);
+              clearForm(); // Reset form on update failure
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while updating the student: ' + error.message);
+          clearForm(); // Reset form on update failure
+        });
+      };
+    }
+  </script>
 </body>
 </html>

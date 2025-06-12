@@ -23,6 +23,9 @@ router.get("/",(req,res)=>{
 router.post("/",(req,res)=>{
 	let qmark = [];
 	let body = req.body;
+	// Remove original_idno from the body as it's not a database column
+	delete body.original_idno;
+	
 	let keys = Object.keys(body);
 	let values = Object.values(body);
 	keys.forEach((item)=>{ qmark.push('?'); });
@@ -38,10 +41,12 @@ router.post("/",(req,res)=>{
 		if(err){
 			console.log("error : "+err);
 			db.close();
-			res.status(500).json(err);
+			return res.status(500).json(err);
 		}
-		db.close();
-		res.status(200).json({message:'New Student Added'});
+		else{
+			db.close();
+			res.status(200).json({message:'New Student Added'});
+		}
 	});
 });
 
@@ -56,10 +61,11 @@ router.delete("/:idno",(req,res)=>{
 			db.close();
 			return res.status(500).json(err);
 		}
-		db.close();
-		return res.status(200).json({message:'Student Deleted'});
-	})
-	
+		else{
+			db.close();
+			return res.status(200).json({message:'Student Deleted'});
+		}
+	});
 });
 
 
@@ -80,21 +86,31 @@ router.get("/:idno",(req,res)=>{
 });
 
 router.put("/",(req,res)=>{
-	let fld_data = [];
 	let body = req.body;
-	let keys = Object.keys(body);
-	let values = Object.values(body);
-	for(let i=1;i<values.length;i++){
-		fld_data.push("`"+keys[i]+"`='"+values[i]+"'");
+	let original_idno = body.original_idno; // Get the old IDNO for the WHERE clause
+	let updateFields = [];
+	let updateValues = [];
+
+	// Iterate over all fields except original_idno
+	for (const key in body) {
+		if (key !== 'original_idno') {
+			updateFields.push(`\`${key}\` = ?`);
+			updateValues.push(body[key]);
+		}
 	}
-	//join fld_data as 1 string with command delimiter
-	let fld = fld_data.join(',');
-	let sql = "UPDATE `"+table+"` SET "+fld+" WHERE `"+keys[0]+"`='"+values[0]+"'";
-	//console.log(sql);
+
+	// Add the original_idno to the values for the WHERE clause
+	updateValues.push(original_idno);
+
+	let sql = `UPDATE \`${table}\` SET ${updateFields.join(', ')} WHERE \`idno\` = ?`;
+
+	console.log("SQL for update:", sql);
+	console.log("Values for update:", updateValues);
+
 	const db = new sqlite.Database(config.sqlitedb);
-	db.run(sql,(err)=>{
+	db.run(sql, updateValues, (err)=>{
 		if(err){
-			console.log("error : "+err);
+			console.log("error : " + err);
 			db.close();
 			res.status(500).json(err);
 		}
