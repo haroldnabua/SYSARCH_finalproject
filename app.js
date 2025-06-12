@@ -62,8 +62,28 @@ app.post('/dashboard', async (req, res) => {
   }
 });
 
-app.get('/subject', (req, res) => {
-  res.render('subject');
+app.get('/subject', async (req, res) => {
+  try {
+    const response = await axios.get(`http://localhost:${port}/api/courses`);
+    const subjects = response.data;
+    console.log("Subjects fetched for subject.ejs:", subjects);
+    res.render('subject', { subjects });
+  } catch (err) {
+    console.error("Error fetching subjects for subject.ejs:", err);
+    res.render('subject', { subjects: [] });
+  }
+});
+
+app.get('/enrollment', (req, res) => {
+  const subject = {
+    edpcode: req.query.edpcode,
+    subcode: req.query.subcode,
+    descriptivetitle: req.query.description,
+    schedule: req.query.schedule,
+    room: req.query.room,
+    units: req.query.units
+  };
+  res.render('enrollment', { subject });
 });
 
 const server = app.listen(port,()=>{

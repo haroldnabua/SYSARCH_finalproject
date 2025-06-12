@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Enrollment</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .navbar {
+      background: #000;
+      color: #fff;
+      padding: 10px 0;
+    }
+    .navbar .nav {
+      background: #888;
+      color: #fff;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .navbar .nav .links {
+      display: flex;
+      gap: 20px;
+    }
+    .container {
+      display: flex;
+      margin: 20px auto;
+      width: 1000px;
+      border: 1px solid #aaa;
+      min-height: 500px;
+      background: #fafafa;
+    }
+    .subject-info-bar {
+      margin-bottom: 10px;
+      font-size: 1rem;
+      display: flex;
+      gap: 30px;
+      align-items: center;
+      padding: 20px;
+      border-bottom: 1px solid #aaa;
+      width: 100%;
+    }
+    .subject-info-bar span {
+      font-weight: 500;
+    }
+    .enrollment-section {
+      flex: 1;
+      padding: 20px;
+    }
+    .search-box {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      border: 1px solid #222;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      padding: 4px 8px;
+      background: #fafafa;
+    }
+    .search-box input {
+      border: none;
+      outline: none;
+      flex: 1;
+      font-size: 1rem;
+      background: transparent;
+      padding: 6px 0;
+    }
+    .search-box svg {
+      width: 22px;
+      height: 22px;
+      color: #222;
+      margin-left: 4px;
+    }
+    .profile-pic {
+      width: 100px;
+      height: 100px;
+      border: 1px solid #aaa;
+      border-radius: 50%;
+      margin: 20px 0 20px 0;
+      background: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .student-info-list {
+      width: 100%;
+      margin-bottom: 30px;
+      font-size: 1rem;
+    }
+    .student-info-list tr td:first-child {
+      font-weight: bold;
+      padding-right: 10px;
+      text-align: right;
+      width: 90px;
+    }
+    .enroll-btn {
+      width: 100%;
+      background: #3a47e7;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 16px 0;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      transition: background 0.2s;
+    }
+    .enroll-btn:hover {
+      background: #2a3db8;
+    }
+    .note {
+      font-size: 0.95rem;
+      color: #222;
+      margin-top: 20px;
+    }
+    .note b {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="nav">
+      <span class="title"><a href="/dashboard" style="color:#fff;text-decoration:none;"><b>STUDENT</b></a></span>
+      <div class="links">
+        <a href="/dashboard" style="color:#fff;text-decoration:none;">REGISTER</a>
+        <a href="/subject" style="color:#fff;text-decoration:none;">SUBJECT</a>
+        <a href="/grades" style="color:#fff;text-decoration:none;">GRADES</a>
+      </div>
+      <span><a href="/logout" style="color:#fff;text-decoration:none;">LOGOUT</a></span>
+    </div>
+  </div>
+  <div class="container">
+    <div class="enrollment-section">
+      <div class="subject-info-bar">
+        <span>SUBJECT : <%= subject.edpcode %></span>
+        <span><%= subject.description %></span>
+        <span><%= subject.schedule %></span>
+        <span><%= subject.room %></span>
+      </div>
+      <div class="search-box">
+        <input type="text" placeholder="STUDENT IDNO" />
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </div>
+      <div class="profile-pic">
+        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="0" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </div>
+      <table class="student-info-list">
+        <tr>
+          <td>IDNO</td>
+          <td>: 1000</td>
+        </tr>
+        <tr>
+          <td>LASTNAME</td>
+          <td>: DURANO</td>
+        </tr>
+        <tr>
+          <td>FIRSTNAME</td>
+          <td>: DENNIS</td>
+        </tr>
+        <tr>
+          <td>COURSE</td>
+          <td>: BSCPE</td>
+        </tr>
+        <tr>
+          <td>LEVEL</td>
+          <td>: 4</td>
+        </tr>
+      </table>
+      <button class="enroll-btn">ENROLL</button>
+      <div class="note">
+        NOTE : TO ASSIGN GRADE, CLICK ON THE STUDENT IDNO
+      </div>
+    </div>
+  </div>
+</body>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const enrollButton = document.querySelector('.enroll-btn');
+    const studentIdnoInput = document.querySelector('.search-box input');
+    const edpcodeElement = document.querySelector('.subject-info-bar span:first-child');
+
+    enrollButton.addEventListener('click', async () => {
+      const studentIdno = studentIdnoInput.value.trim();
+      const edpcode = edpcodeElement.textContent.replace('SUBJECT : ', '').trim();
+
+      if (!studentIdno) {
+        alert('Please enter a Student IDNO.');
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/courses/enroll', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ studentIdno, edpcode }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert(data.message);
+          // Optionally clear the student IDNO input or redirect
+          studentIdnoInput.value = '';
+        } else {
+          alert(`Error: ${data.message || 'Failed to enroll student.'}`);
+        }
+      } catch (error) {
+        console.error('Error during enrollment:', error);
+        alert('An error occurred during enrollment.');
+      }
+    });
+  });
+</script>
+</html> 

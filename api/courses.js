@@ -7,7 +7,7 @@ const router = express.Router();
 const table = "courses";
 
 router.get("/",(req,res)=>{
-	let sql = "SELECT * FROM `"+table+"`";
+	let sql = "SELECT `edpcode`, `subcode`, `descriptivetitle`, `schedule`, `room`, `units` FROM `"+table+"`";
 	const db = new sqlite.Database(config.sqlitedb);
 	db.all(sql,(err,rows)=>{
 		if(err){
@@ -80,19 +80,38 @@ router.get("/:courseid",(req,res)=>{
 });
 
 router.put("/",(req,res)=>{
-	let fld_data = [];
 	let body = req.body;
-	let keys = Object.keys(body);
-	let values = Object.values(body);
-	for(let i=1;i<values.length;i++){
-		fld_data.push("`"+keys[i]+"`='"+values[i]+"'");
+	console.log("PUT request body:", body);
+	const originalEdpcode = body.originalEdpcode;
+	const updatedFields = {};
+	
+	// Filter out originalEdpcode and prepare fields for update
+	for (const key in body) {
+		if (key !== 'originalEdpcode') {
+			updatedFields[key] = body[key];
+		}
 	}
-	//join fld_data as 1 string with command delimiter
-	let fld = fld_data.join(',');
-	let sql = "UPDATE `"+table+"` SET "+fld+" WHERE `"+keys[0]+"`='"+values[0]+"'";
-	//console.log(sql);
+	console.log("Updated fields (excluding originalEdpcode):", updatedFields);
+
+	let setClauses = [];
+	let values = [];
+	for (const key in updatedFields) {
+		setClauses.push(`\`${key}\` = ?`);
+		values.push(updatedFields[key]);
+	}
+	
+	if (setClauses.length === 0) {
+		return res.status(400).json({ message: 'No fields to update' });
+	}
+	
+	let sql = `UPDATE \`${table}\` SET ${setClauses.join(',')} WHERE \`edpcode\` = ?`;
+	values.push(originalEdpcode);
+	
+	console.log("Generated SQL for UPDATE:", sql);
+	console.log("Values for UPDATE query:", values);
+	
 	const db = new sqlite.Database(config.sqlitedb);
-	db.run(sql,(err)=>{
+	db.run(sql,values,(err)=>{
 		if(err){
 			console.log("error : "+err);
 			db.close();
@@ -105,5 +124,12 @@ router.put("/",(req,res)=>{
 	});
 });
 
+router.post("/enroll",(req,res)=>{
+	const { studentIdno, edpcode } = req.body;
+	console.log(`Enrollment request for Student ID: ${studentIdno} in EDP Code: ${edpcode}`);
+	// In a real application, you would insert this into a "student_enrollments" table
+	// For now, it's a placeholder.
+	res.status(200).json({ message: 'Enrollment successful (simulated)' });
+});
 
 module.exports = router;

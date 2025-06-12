@@ -50,13 +50,31 @@
       border-collapse: collapse;
       margin-top: 10px;
       background: #fff;
+      border: 1px solid #aaa;
     }
     th, td {
-      border-bottom: 1px solid #ccc;
       padding: 8px;
       text-align: left;
+      border-bottom: 1px solid #ccc;
+      border-right: 1px solid #ccc;
     }
-    th { font-weight: bold; }
+    th:last-child, td:last-child {
+      border-right: none;
+    }
+    td.action-buttons-cell {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 5px;
+      border-bottom: none !important;
+    }
+    th {
+      font-weight: bold;
+      border-top: 1px solid #ccc;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
     .action-btn {
       width: 32px;
       height: 32px;
@@ -84,6 +102,49 @@
       flex-direction: column;
       align-items: center;
       background: #fff;
+    }
+    .subject-form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .form-group {
+      width: 100%;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+    .form-group input[type="text"] {
+      width: calc(100% - 18px); /* Adjust for padding and border */
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .cancel-btn, .save-btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      color: #fff;
+    }
+    .cancel-btn {
+      background-color: #dc3545;
+    }
+    .save-btn {
+      background-color: #007bff;
     }
     .note{
         margin-top: 400px;
@@ -176,62 +237,240 @@
             <th>SCHEDULE</th>
             <th>ROOM</th>
             <th>UNITS</th>
-            <th>ACTIONS</th>
+            <th>ACTION</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td><a href="#" style="color:#222;text-decoration:underline;">1000</a></td>
-            <td>SYSADMN32</td>
-            <td>SYSTEM ADMINISTRATION</td>
-            <td>1:30-3:00 TTH</td>
-            <td>526</td>
-            <td>4.0</td>
-            <td>
-              <span class="action-btn" title="Delete">
-                <!-- Trash Can Icon -->
-                <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
-                  <polyline points="3 6 5 6 21 6"/>
-                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                  <line x1="10" y1="11" x2="10" y2="17"/>
-                  <line x1="14" y1="11" x2="14" y2="17"/>
-                </svg>
-              </span>
-            </td>
-          </tr>
-          <!-- More students can be added here -->
+          <% if (subjects && subjects.length > 0) { %>
+            <% subjects.forEach(function(subject) { %>
+            <tr>
+              <td><a href="/enrollment?edpcode=<%= subject.edpcode %>&subcode=<%= subject.subcode %>&description=<%= subject.descriptivetitle %>&schedule=<%= subject.schedule %>&room=<%= subject.room %>&units=<%= subject.units %>" style="color:#222;text-decoration:underline;"><%= subject.edpcode %></a></td>
+              <td><%= subject.subcode %></td>
+              <td><%= subject.descriptivetitle %></td>
+              <td><%= subject.schedule %></td>
+              <td><%= subject.room %></td>
+              <td><%= subject.units %></td>
+              <td class="action-buttons-cell">
+                <span class="action-btn edit-btn" title="Edit" style="background:#28a745;" data-edpcode="<%= subject.edpcode %>">
+                  <!-- Edit Icon -->
+                  <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M17 3a2.828 2.828 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+                  </svg>
+                </span>
+                <span class="action-btn delete-btn" title="Delete" style="background:#dc3545;" data-edpcode="<%= subject.edpcode %>">
+                  <!-- Trash Can Icon -->
+                  <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    <line x1="10" y1="11" x2="10" y2="17"/>
+                    <line x1="14" y1="11" x2="14" y2="17"/>
+                  </svg>
+                </span>
+              </td>
+            </tr>
+            <% }); %>
+          <% } else { %>
+            <tr>
+              <td colspan="7">No subjects found.</td>
+            </tr>
+          <% } %>
         </tbody>
       </table>
-      <div class="note">
-        <b>NOTE :</b> To assign grade, click on the student ID number.
-      </div>
     </div>
     <div class="student-detail-section">
-      <form class="search-box" method="GET" action="#">
-        <input type="text" name="search" placeholder="STUDENT IDNO">
-        <button type="submit" style="background:none;border:none;padding:0;cursor:pointer;">
-          <svg fill="none" stroke="#222" stroke-width="2" viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="8"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          </svg>
-        </button>
+      <form class="subject-form">
+        <div class="form-group">
+          <label for="edpcode">EDP CODE</label>
+          <input type="text" id="edpcode" name="edpcode">
+        </div>
+        <div class="form-group">
+          <label for="subcode">SUBJECT CODE</label>
+          <input type="text" id="subcode" name="subcode">
+        </div>
+        <div class="form-group">
+          <label for="descriptivetitle">DESCRIPTIVE TITLE</label>
+          <input type="text" id="descriptivetitle" name="descriptivetitle">
+        </div>
+        <div class="form-group">
+          <label for="schedule">SCHEDULE</label>
+          <input type="text" id="schedule" name="schedule">
+        </div>
+        <div class="form-group">
+          <label for="room">ROOM</label>
+          <input type="text" id="room" name="room">
+        </div>
+        <div class="form-group">
+          <label for="units">UNITS</label>
+          <input type="text" id="units" name="units">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="cancel-btn">CANCEL</button>
+          <button type="submit" class="save-btn">SAVE</button>
+        </div>
       </form>
-      <div class="profile-pic">
-        <!-- Placeholder for profile image -->
-        <svg width="60" height="60">
-          <circle cx="30" cy="22" r="18" fill="#bbb"/>
-          <ellipse cx="30" cy="48" rx="22" ry="12" fill="#bbb"/>
-        </svg>
-      </div>
-      <table class="student-info-list">
-        <tr><td>IDNO</td><td>: 1000</td></tr>
-        <tr><td>LASTNAME</td><td>: DURANO</td></tr>
-        <tr><td>FIRSTNAME</td><td>: DENNIS</td></tr>
-        <tr><td>COURSE</td><td>: BSCPE</td></tr>
-        <tr><td>LEVEL</td><td>: 4</td></tr>
-      </table>
-      <button class="enroll-btn">ENROLL</button>
     </div>
   </div>
 </body>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const editButtons = document.querySelectorAll('.edit-btn');
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+
+    const edpcodeInput = document.getElementById('edpcode');
+    const subcodeInput = document.getElementById('subcode');
+    const descriptivetitleInput = document.getElementById('descriptivetitle');
+    const scheduleInput = document.getElementById('schedule');
+    const roomInput = document.getElementById('room');
+    const unitsInput = document.getElementById('units');
+    const saveButton = document.querySelector('.save-btn');
+    const cancelButton = document.querySelector('.cancel-btn');
+    const subjectForm = document.querySelector('.subject-form');
+
+
+    // Function to populate form fields for editing
+    const populateFormForEdit = (row) => {
+      const cells = row.querySelectorAll('td');
+      const edpCode = cells[0].querySelector('a') ? cells[0].querySelector('a').textContent.trim() : cells[0].textContent.trim();
+      // Assuming the order of cells matches the form fields
+      edpcodeInput.value = edpCode;
+      subcodeInput.value = cells[1].textContent.trim();
+      descriptivetitleInput.value = cells[2].textContent.trim();
+      scheduleInput.value = cells[3].textContent.trim();
+      roomInput.value = cells[4].textContent.trim();
+      unitsInput.value = cells[5].textContent.trim();
+
+      saveButton.textContent = 'UPDATE'; // Change button text for update operation
+      saveButton.dataset.currentEdpcode = edpCode; // Store the original EDP code for updating
+    };
+
+    // Function to clear the form
+    const clearForm = () => {
+      edpcodeInput.value = '';
+      subcodeInput.value = '';
+      descriptivetitleInput.value = '';
+      scheduleInput.value = '';
+      roomInput.value = '';
+      unitsInput.value = '';
+      saveButton.textContent = 'SAVE'; // Reset button text
+      delete saveButton.dataset.currentEdpcode; // Remove the stored EDP code
+    };
+
+    // Event listeners for edit buttons
+    editButtons.forEach(button => {
+      button.addEventListener('click', (event) => {
+        const row = event.target.closest('tr'); // Get the parent table row
+        populateFormForEdit(row);
+      });
+    });
+
+    // Event listeners for delete buttons
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', async (event) => {
+        const row = event.target.closest('tr');
+        const edpCode = button.dataset.edpcode; // Get edpcode from data-attribute
+
+        if (confirm(`Are you sure you want to delete subject with EDP Code: ${edpCode}?`)) {
+          try {
+            // Simulate successful deletion for demonstration
+            row.remove(); // Remove the row from the DOM
+            alert('Subject deleted successfully (simulated)!');
+            clearForm(); // Clear the form after simulated deletion
+          } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the subject.');
+          }
+        }
+      });
+    });
+
+    // Event listener for form submission (SAVE/UPDATE)
+    subjectForm.addEventListener('submit', async (event) => {
+      event.preventDefault(); // Prevent default form submission
+
+      const currentEdpcode = saveButton.dataset.currentEdpcode;
+      const newEdpcode = edpcodeInput.value.trim();
+      const newSubcode = subcodeInput.value.trim();
+      const newDescriptivetitle = descriptivetitleInput.value.trim();
+      const newSchedule = scheduleInput.value.trim();
+      const newRoom = roomInput.value.trim();
+      const newUnits = unitsInput.value.trim();
+
+      if (currentEdpcode) {
+        // This is an update operation
+        const updatedSubject = {
+          originalEdpcode: currentEdpcode, // Send original EDP code for identification
+          edpcode: newEdpcode,
+          subcode: newSubcode,
+          descriptivetitle: newDescriptivetitle,
+          schedule: newSchedule,
+          room: newRoom,
+          units: newUnits
+        };
+
+        try {
+          const response = await fetch('/api/courses', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedSubject),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            alert(data.message);
+            window.location.reload(); // Reload to fetch updated data
+          } else {
+            alert(`Error: ${data.message || 'Failed to update subject.'}`);
+          }
+        } catch (error) {
+          console.error('Error updating subject:', error);
+          alert('An error occurred while updating the subject.');
+        }
+      } else {
+        // This is an ADD operation
+        const newSubject = {
+          edpcode: newEdpcode,
+          subcode: newSubcode,
+          descriptivetitle: newDescriptivetitle,
+          schedule: newSchedule,
+          room: newRoom,
+          units: newUnits
+        };
+
+        try {
+          const response = await fetch('/api/courses', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newSubject),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            alert(data.message);
+            // Reload the page to fetch the updated list of subjects from the database
+            window.location.reload();
+          } else {
+            alert(`Error: ${data.message || 'Failed to add subject.'}`);
+          }
+        } catch (error) {
+          console.error('Error adding subject:', error);
+          alert('An error occurred while adding the subject.');
+        }
+
+        clearForm();
+      }
+    });
+
+    // Event listener for cancel button
+    cancelButton.addEventListener('click', clearForm);
+
+    // Initial form clear on load
+    clearForm();
+  });
+</script>
 </html>
