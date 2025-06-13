@@ -371,10 +371,19 @@
 
         if (confirm(`Are you sure you want to delete subject with EDP Code: ${edpCode}?`)) {
           try {
-            // Simulate successful deletion for demonstration
-            row.remove(); // Remove the row from the DOM
-            alert('Subject deleted successfully (simulated)!');
-            clearForm(); // Clear the form after simulated deletion
+            const response = await fetch(`/api/courses/${edpCode}`, {
+              method: 'DELETE',
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              row.remove(); // Remove the row from the DOM
+              alert('Subject deleted successfully!');
+              clearForm(); // Clear the form after deletion
+            } else {
+              alert(`Error: ${data.message || 'Failed to delete subject.'}`);
+            }
           } catch (error) {
             console.error('Error:', error);
             alert('An error occurred while deleting the subject.');

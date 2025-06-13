@@ -45,12 +45,12 @@ router.post("/",(req,res)=>{
 	});
 });
 
-router.delete("/:courseid",(req,res)=>{
-	let idno = req.params.idno;
-	let sql = "DELETE FROM `"+table+"` WHERE `courseid`=?";
+router.delete("/:edpcode",(req,res)=>{
+	let edpcode = req.params.edpcode;
+	let sql = "DELETE FROM `"+table+"` WHERE `edpcode`=?";
 	const db = new sqlite.Database(config.sqlitedb);
 	console.log(sql);
-	db.run(sql,idno,(err)=>{
+	db.run(sql,edpcode,(err)=>{
 		if(err){
 			console.log("error :"+err);
 			db.close();
@@ -59,7 +59,6 @@ router.delete("/:courseid",(req,res)=>{
 		db.close();
 		return res.status(200).json({message:'Course Deleted'});
 	})
-	
 });
 
 
