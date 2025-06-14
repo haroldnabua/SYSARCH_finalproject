@@ -13,7 +13,7 @@ router.get("/",(req,res)=>{
 		if(err){
 			console.log("error:"+err);
 			db.close();
-			return res.status(500).json(err);
+			return res.status(500).json({ message: 'Database error during fetch.', error: err.message });
 		}
 		db.close();
 		return res.status(200).json(rows);
@@ -41,7 +41,7 @@ router.post("/",(req,res)=>{
 		if(err){
 			console.log("error : "+err);
 			db.close();
-			return res.status(500).json(err);
+			return res.status(500).json({ message: 'Database error during insert.', error: err.message });
 		}
 		else{
 			db.close();
@@ -59,7 +59,7 @@ router.delete("/:idno",(req,res)=>{
 		if(err){
 			console.log("error :"+err);
 			db.close();
-			return res.status(500).json(err);
+			return res.status(500).json({ message: 'Database error during delete.', error: err.message });
 		}
 		else{
 			db.close();
@@ -78,8 +78,12 @@ router.get("/:idno",(req,res)=>{
 		if(err){
 			console.log("error :"+err);
 			db.close();
-			return res.status(500).json(err);
+			return res.status(500).json({ message: 'Database error during fetch by ID.', error: err.message });
 		}
+		if (!row) { // Check if no row was returned
+            db.close();
+            return res.status(404).json({ message: 'Student not found.' });
+        }
 		db.close();
 		return res.status(200).json(row);
 	})
@@ -112,7 +116,7 @@ router.put("/",(req,res)=>{
 		if(err){
 			console.log("error : " + err);
 			db.close();
-			res.status(500).json(err);
+			res.status(500).json({ message: 'Database error during update.', error: err.message });
 		}
 		else{
 			db.close();

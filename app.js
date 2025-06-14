@@ -4,6 +4,7 @@ const students = require("./api/students");
 const courses = require("./api/courses");
 const path = require('path');
 const axios = require('axios');
+const sqlite = require('sqlite3');
 
 const port = config.port || 4321;
 
@@ -74,7 +75,7 @@ app.get('/subject', async (req, res) => {
   }
 });
 
-app.get('/enrollment', (req, res) => {
+app.get('/enrollment', async (req, res) => {
   const subject = {
     edpcode: req.query.edpcode,
     subcode: req.query.subcode,
@@ -83,9 +84,35 @@ app.get('/enrollment', (req, res) => {
     room: req.query.room,
     units: req.query.units
   };
-  res.render('enrollment', { subject });
+  try {
+    // Assuming an API endpoint to fetch students by EDP code
+    const response = await axios.get(`http://localhost:${port}/api/courses/${subject.edpcode}/students`);
+    const students = response.data;
+    res.render('enrollment', { subject, students });
+  } catch (err) {
+    console.error("Error fetching students for enrollment:", err);
+    res.render('enrollment', { subject, students: [] }); // Pass an empty array if there's an error
+  }
 });
 
 const server = app.listen(port,()=>{
 	console.log(`listening at port : ${port}`);
+
+    const db = new sqlite.Database(config.sqlitedb);
+    db.run(`
+        CREATE TABLE IF NOT EXISTS student_enrollments (
+            student_idno VARCHAR(10) NOT NULL,
+            edp_code INTEGER NOT NULL,
+            PRIMARY KEY (student_idno, edp_code),
+            FOREIGN KEY (student_idno) REFERENCES students(idno) ON DELETE CASCADE,
+            FOREIGN KEY (edp_code) REFERENCES courses(edpcode) ON DELETE CASCADE
+        );
+    `, (err) => {
+        if (err) {
+            console.error("Error creating student_enrollments table:", err.message);
+        } else {
+            console.log("student_enrollments table ensured.");
+        }
+        db.close();
+    });
 });
