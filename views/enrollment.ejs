@@ -247,7 +247,7 @@
               <% students.forEach((student, index) => { %>
                 <tr>
                   <td><%= index + 1 %></td>
-                  <td><a href="#" class="idno-link" data-idno="<%= student.idno %>"><%= student.idno %></a></td>
+                  <td><a href="/grades?idno=<%= student.idno %>&edpcode=<%= subject.edpcode %>" class="idno-link" data-idno="<%= student.idno %>"><%= student.idno %></a></td>
                   <td><%= student.lastname %></td>
                   <td><%= student.firstname %></td>
                   <td><%= student.course %></td>
@@ -410,7 +410,6 @@
 
     document.querySelectorAll('.idno-link').forEach(link => {
         link.addEventListener('click', (e) => {
-            e.preventDefault();
             const idno = e.target.dataset.idno;
             studentIdnoInput.value = idno;
             fetchStudentInfo(idno);

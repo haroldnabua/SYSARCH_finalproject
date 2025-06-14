@@ -63,6 +63,25 @@ app.post('/dashboard', async (req, res) => {
   }
 });
 
+app.get('/grades', async (req, res) => {
+  const studentIdno = req.query.idno;
+  const edpcode = req.query.edpcode;
+  let subject = null;
+
+  try {
+    if (edpcode) {
+      const subjectResponse = await axios.get(`http://localhost:${port}/api/courses/${edpcode}`);
+      subject = subjectResponse.data;
+    }
+    
+    // Students will be fetched by frontend based on context (idno or edpcode)
+    res.render('grades', { students: [], initialIdno: studentIdno, edpcode: edpcode, subject: subject });
+  } catch (err) {
+    console.error("Error fetching data for grades.ejs:", err);
+    res.render('grades', { students: [], initialIdno: studentIdno, edpcode: edpcode, subject: null, error: err.message });
+  }
+});
+
 app.get('/subject', async (req, res) => {
   try {
     const response = await axios.get(`http://localhost:${port}/api/courses`);

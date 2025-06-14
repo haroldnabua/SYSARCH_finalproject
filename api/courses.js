@@ -62,12 +62,12 @@ router.delete("/:edpcode",(req,res)=>{
 });
 
 
-router.get("/:courseid",(req,res)=>{
-	let courseid = req.params.courseid;
-	let sql = "SELECT * FROM `"+table+"` WHERE `courseid`=?";
+router.get("/:edpcode",(req,res)=>{
+	let edpcode = req.params.edpcode;
+	let sql = "SELECT * FROM `"+table+"` WHERE `edpcode`=?";
 	const db = new sqlite.Database(config.sqlitedb);
 	console.log(sql);
-	db.get(sql,courseid,(err,row)=>{
+	db.get(sql,edpcode,(err,row)=>{
 		if(err){
 			console.log("error :"+err);
 			db.close();

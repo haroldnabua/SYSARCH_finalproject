@@ -194,10 +194,17 @@
   <div class="container">
     <div class="student-list-section">
       <div class="subject-info-bar">
-        <span>SUBJECT : 02345</span>
-        <span>SYSAD 31</span>
-        <span>1:30-3:00 TTH</span>
-        <span>526</span>
+        <span>SUBJECT : <%= subject ? subject.edpcode : 'N/A' %></span>
+        <span><%= subject ? subject.descriptivetitle : 'N/A' %></span>
+        <span><%= subject ? subject.schedule : 'N/A' %></span>
+        <span><%= subject ? subject.room : 'N/A' %></span>
+      </div>
+      <div id="subject-info-data"
+           data-edpcode="<%= edpcode ? edpcode : '' %>"
+           data-subject-edpcode="<%= subject ? subject.edpcode : '' %>"
+           data-subject-description="<%= subject ? subject.descriptivetitle : '' %>"
+           data-subject-schedule="<%= subject ? subject.schedule : '' %>"
+           data-subject-room="<%= subject ? subject.room : '' %>">
       </div>
       <table>
         <thead>
@@ -215,19 +222,24 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1.</td>
-            <td><a href="#" style="color:#222;text-decoration:underline;">1000</a></td>
-            <td>DURANO</td>
-            <td>DENNIS</td>
-            <td>BSCPE</td>
-            <td>1.5</td>
-            <td>1.8</td>
-            <td>1.7</td>
-            <td>1.6</td>
-            <td><b>1.7</b></td>
-          </tr>
-          <!-- More students can be added here -->
+          <% if (students && students.length > 0) { %>
+            <% students.forEach((student, index) => { %>
+              <tr data-idno="<%= student.idno %>">
+                <td><%= index + 1 %>.</td>
+                <td><a href="#" class="student-idno-link" data-idno="<%= student.idno %>" style="color:#222;text-decoration:underline;"><%= student.idno %></a></td>
+                <td><%= student.lastname %></td>
+                <td><%= student.firstname %></td>
+                <td><%= student.course %></td>
+                <td class="prelim-grade"><%= (student.prelim || 0).toFixed(1) %></td>
+                <td class="midterm-grade"><%= (student.midterm || 0).toFixed(1) %></td>
+                <td class="semifinal-grade"><%= (student.semifinal || 0).toFixed(1) %></td>
+                <td class="final-grade"><%= (student.final || 0).toFixed(1) %></td>
+                <td class="fg-grade"><b><%= (student.fg || 0).toFixed(1) %></b></td>
+              </tr>
+            <% }) %>
+          <% } else { %>
+            <tr><td colspan="10" style="text-align:center;">No students found.</td></tr>
+          <% } %>
         </tbody>
       </table>
       <div class="note">
@@ -252,17 +264,17 @@
         </svg>
       </div>
       <table class="student-info-list">
-        <tr><td>IDNO</td><td>: 1000</td></tr>
-        <tr><td>LASTNAME</td><td>: DURANO</td></tr>
-        <tr><td>FIRSTNAME</td><td>: DENNIS</td></tr>
-        <tr><td>COURSE</td><td>: BSCPE</td></tr>
-        <tr><td>LEVEL</td><td>: LEVEL 4</td></tr>
+        <tr><td>IDNO</td><td id="detail-idno">: </td></tr>
+        <tr><td>LASTNAME</td><td id="detail-lastname">: </td></tr>
+        <tr><td>FIRSTNAME</td><td id="detail-firstname">: </td></tr>
+        <tr><td>COURSE</td><td id="detail-course">: </td></tr>
+        <tr><td>LEVEL</td><td id="detail-level">: </td></tr>
       </table>
-      <form style="width:100%;">
-        <input class="grade-input" type="text" name="prelim" placeholder="PRELIM">
-        <input class="grade-input" type="text" name="midterm" placeholder="MIDTERM">
-        <input class="grade-input" type="text" name="semifinal" placeholder="SEMI-FINAL">
-        <input class="grade-input" type="text" name="final" placeholder="FINAL">
+      <form id="grade-edit-form" style="width:100%;">
+        <input class="grade-input" type="text" id="prelim-input" name="prelim" placeholder="PRELIM">
+        <input class="grade-input" type="text" id="midterm-input" name="midterm" placeholder="MIDTERM">
+        <input class="grade-input" type="text" id="semifinal-input" name="semifinal" placeholder="SEMI-FINAL">
+        <input class="grade-input" type="text" id="final-input" name="final" placeholder="FINAL">
         <div class="btn-row">
           <button type="button" class="cancel-btn">CANCEL</button>
           <button type="submit" class="save-btn">SAVE</button>
@@ -270,5 +282,306 @@
       </form>
     </div>
   </div>
+  <div id="student-data" data-students='<%- JSON.stringify(students) %>'></div>
 </body>
+<script>
+    const studentDataElement = document.getElementById('student-data');
+    const students = JSON.parse(studentDataElement.dataset.students);
+
+    const subjectInfoElement = document.getElementById('subject-info-data');
+    const currentEdpcode = subjectInfoElement.dataset.edpcode;
+
+    let currentStudentId = null; // To keep track of the student currently being edited
+
+    function calculateFG(prelim, midterm, semifinal, final) {
+        prelim = parseFloat(prelim) || 0;
+        midterm = parseFloat(midterm) || 0;
+        semifinal = parseFloat(semifinal) || 0;
+        final = parseFloat(final) || 0;
+
+        // Grades range from 1.0 (highest) to 5.0 (lowest, failing).
+        // Ensure grades are within this range.
+        prelim = Math.max(1.0, Math.min(5.0, prelim));
+        midterm = Math.max(1.0, Math.min(5.0, midterm));
+        semifinal = Math.max(1.0, Math.min(5.0, semifinal));
+        final = Math.max(1.0, Math.min(5.0, final));
+
+        const average = (prelim + midterm + semifinal + final) / 4;
+        return average.toFixed(1); // Round to one decimal place
+    }
+
+    function displayStudentDetails(student) {
+        document.getElementById('detail-idno').textContent = ': ' + student.idno;
+        document.getElementById('detail-lastname').textContent = ': ' + student.lastname;
+        document.getElementById('detail-firstname').textContent = ': ' + student.firstname;
+        document.getElementById('detail-course').textContent = ': ' + student.course;
+        document.getElementById('detail-level').textContent = ': ' + student.level;
+
+        document.getElementById('prelim-input').value = (student.prelim || 0).toFixed(1);
+        document.getElementById('midterm-input').value = (student.midterm || 0).toFixed(1);
+        document.getElementById('semifinal-input').value = (student.semifinal || 0).toFixed(1);
+        document.getElementById('final-input').value = (student.final || 0).toFixed(1);
+
+        currentStudentId = student.idno;
+    }
+
+    function clearStudentDetails() {
+        document.getElementById('detail-idno').textContent = ': ';
+        document.getElementById('detail-lastname').textContent = ': ';
+        document.getElementById('detail-firstname').textContent = ': ';
+        document.getElementById('detail-course').textContent = ': ';
+        document.getElementById('detail-level').textContent = ': ';
+
+        document.getElementById('prelim-input').value = '';
+        document.getElementById('midterm-input').value = '';
+        document.getElementById('semifinal-input').value = '';
+        document.getElementById('final-input').value = '';
+
+        currentStudentId = null;
+    }
+
+    // Event Listeners
+    document.addEventListener('DOMContentLoaded', () => {
+        // Get student ID from URL query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const initialIdno = urlParams.get('idno');
+
+        if (initialIdno && currentEdpcode) {
+            fetch(`/api/students/${initialIdno}/subject-grades/${currentEdpcode}`)
+                .then(response => {
+                    if (!response.ok) {
+                        // If response is not OK, read the text to get potential error message
+                        return response.text().then(text => {
+                            throw new Error(text || `HTTP error! status: ${response.status}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(student => {
+                    if (student) {
+                        displayStudentDetails(student);
+                    } else {
+                        alert('Student with IDNO ' + initialIdno + ' not found.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching initial student details:', error);
+                    alert('An error occurred while fetching initial student details.');
+                });
+        } else if (initialIdno && !currentEdpcode) { // Handle case where idno is present but edpcode is not
+             alert('Subject EDP Code is missing in the URL. Cannot fetch specific student grades.');
+             clearStudentDetails();
+        }
+
+        // Event listener for student IDNO links (using event delegation)
+        document.addEventListener('click', async function(event) {
+            const link = event.target.closest('.student-idno-link');
+            if (link) {
+                event.preventDefault();
+                const idno = link.dataset.idno;
+                console.log('Student IDNO clicked (delegated):', idno);
+                // Pass edpcode when fetching student details
+                if (currentEdpcode) {
+                    console.log('Fetching details for IDNO:', idno, 'and EDP Code:', currentEdpcode);
+                    try {
+                        const response = await fetch(`/api/students/${idno}/subject-grades/${currentEdpcode}`);
+                        if (!response.ok) {
+                            const errorText = await response.text();
+                            throw new Error(errorText || `HTTP error! status: ${response.status}`);
+                        }
+                        const student = await response.json();
+                        console.log('Fetched student details:', student);
+                        if (student) {
+                            displayStudentDetails(student);
+                            console.log('displayStudentDetails called successfully.');
+                        } else {
+                            alert('Initial student with IDNO ' + idno + ' not found for this subject.');
+                            clearStudentDetails();
+                            console.log('Student not found or empty response.');
+                        }
+                    } catch (error) {
+                        console.error('Error fetching student details (delegated click listener):', error);
+                        alert('An error occurred while fetching student details: ' + (error.message || 'Unknown error'));
+                        clearStudentDetails();
+                    }
+                } else {
+                    alert('Subject EDP Code is missing. Cannot fetch specific grades.');
+                    clearStudentDetails();
+                    console.log('currentEdpcode is missing.');
+                }
+            }
+        });
+
+        // Event listener for search form
+        document.querySelector('.search-box').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const searchInput = this.querySelector('input[name="search"]');
+            const searchIdno = searchInput.value.trim();
+            if (!searchIdno) return;
+
+            if (currentEdpcode) {
+                try {
+                    const response = await fetch(`/api/students/${searchIdno}/subject-grades/${currentEdpcode}`);
+                    const student = await response.json();
+                    if (response.ok) {
+                        displayStudentDetails(student);
+                    } else {
+                        alert('Student with IDNO ' + searchIdno + ' not found for this subject: ' + (student.message || 'Unknown error'));
+                        clearStudentDetails();
+                    }
+                } catch (error) {
+                    console.error('Error searching student:', error);
+                    alert('An error occurred while searching for the student: ' + error.message);
+                }
+            } else {
+                alert('Subject EDP Code is missing. Cannot search specific grades.');
+                clearStudentDetails();
+            }
+            searchInput.value = ''; // Clear search input
+        });
+
+        // Event listener for Save button
+        document.querySelector('.save-btn').addEventListener('click', async function(event) {
+            event.preventDefault();
+            if (!currentStudentId) {
+                alert('Please select a student first!');
+                return;
+            }
+            if (!currentEdpcode) {
+                alert('Subject EDP Code is missing. Cannot save grades.');
+                return;
+            }
+
+            const prelim = document.getElementById('prelim-input').value;
+            const midterm = document.getElementById('midterm-input').value;
+            const semifinal = document.getElementById('semifinal-input').value;
+            const final = document.getElementById('final-input').value;
+
+            // Simple validation: ensure inputs are numbers
+            if (isNaN(parseFloat(prelim)) || isNaN(parseFloat(midterm)) || isNaN(parseFloat(semifinal)) || isNaN(parseFloat(final))) {
+                alert('Please enter valid numerical grades.');
+                return;
+            }
+
+            try {
+                // Send data to backend API
+                const response = await fetch(`/api/students/${currentStudentId}/grades`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ prelim, midterm, semifinal, final, edpcode: currentEdpcode })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Update the student in the local array with the server's response
+                    // This part needs adjustment if we are no longer using a single `students` array
+                    // for display, but fetching specific student+grade combos.
+                    // For now, we will simply reload the current student's grades.
+                    // In a more complex app, you might update the table row for the specific student and subject.
+
+                    // Refetch and update the specific student's row to reflect the saved grade
+                    const updatedStudentResponse = await fetch(`/api/students/${currentStudentId}/subject-grades/${currentEdpcode}`);
+                    const updatedStudent = await updatedStudentResponse.json();
+
+                    if (updatedStudentResponse.ok && updatedStudent) {
+                        const row = document.querySelector(`tr[data-idno="${currentStudentId}"]`);
+                        if (row) {
+                            row.querySelector('.prelim-grade').textContent = (updatedStudent.prelim || 0).toFixed(1);
+                            row.querySelector('.midterm-grade').textContent = (updatedStudent.midterm || 0).toFixed(1);
+                            row.querySelector('.semifinal-grade').textContent = (updatedStudent.semifinal || 0).toFixed(1);
+                            row.querySelector('.final-grade').textContent = (updatedStudent.final || 0).toFixed(1);
+                            row.querySelector('.fg-grade').textContent = (updatedStudent.fg || 0).toFixed(1);
+                        }
+                        alert(data.message);
+                    } else {
+                        alert('Grades saved, but failed to refresh table: ' + (updatedStudent.message || ''));
+                    }
+
+                } else {
+                    alert('Error saving grades: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while trying to save grades.');
+            }
+        });
+
+        // Initial load: Fetch all students for the current EDP code if available
+        if (currentEdpcode) {
+            fetch(`/api/students/subject/${currentEdpcode}`)
+                .then(response => response.json())
+                .then(studentsForSubject => {
+                    const tbody = document.querySelector('table tbody');
+                    tbody.innerHTML = ''; // Clear existing rows
+                    if (studentsForSubject && studentsForSubject.length > 0) {
+                        studentsForSubject.forEach((student, index) => {
+                            const row = document.createElement('tr');
+                            row.dataset.idno = student.idno;
+                            row.innerHTML = `
+                                <td>${index + 1}.</td>
+                                <td><a href="#" class="student-idno-link" data-idno="${student.idno}" style="color:#222;text-decoration:underline;">${student.idno}</a></td>
+                                <td>${student.lastname}</td>
+                                <td>${student.firstname}</td>
+                                <td>${student.course}</td>
+                                <td class="prelim-grade">${(student.prelim || 0).toFixed(1)}</td>
+                                <td class="midterm-grade">${(student.midterm || 0).toFixed(1)}</td>
+                                <td class="semifinal-grade">${(student.semifinal || 0).toFixed(1)}</td>
+                                <td class="final-grade">${(student.final || 0).toFixed(1)}</td>
+                                <td class="fg-grade"><b>${(student.fg || 0).toFixed(1)}</b></td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">No students enrolled in this subject.</td></tr>';
+                    }
+
+                    // If initialIdno is present, fetch and display that specific student's details
+                    if (initialIdno) {
+                        fetch(`/api/students/${initialIdno}/subject-grades/${currentEdpcode}`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    // If response is not OK, read the text to get potential error message
+                                    return response.text().then(text => {
+                                        throw new Error(text || `HTTP error! status: ${response.status}`);
+                                    });
+                                }
+                                return response.json();
+                            })
+                            .then(student => {
+                                if (student) {
+                                    displayStudentDetails(student);
+                                } else {
+                                    alert('Initial student with IDNO ' + initialIdno + ' not found for this subject.');
+                                    clearStudentDetails();
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error fetching initial student details:', error);
+                                alert('An error occurred while fetching initial student details: ' + (error.message || 'Unknown error'));
+                            });
+                    }
+
+                })
+                .catch(error => {
+                    console.error('Error fetching students for subject:', error);
+                    const tbody = document.querySelector('table tbody');
+                    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">Error loading students: ' + (error.message || 'Unknown error') + '</td></tr>';
+                });
+        } else {
+            // If no EDP code, display message or load all students (current behavior)
+            const tbody = document.querySelector('table tbody');
+            tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;">Please select a subject to view grades.</td></tr>';
+            // Optionally, you could redirect to the subject selection page if no edpcode is provided.
+        }
+
+        // Event listener for Cancel button
+        document.querySelector('.cancel-btn').addEventListener('click', function(event) {
+            event.preventDefault();
+            clearStudentDetails();
+        });
+    });
+</script>
 </html> 
