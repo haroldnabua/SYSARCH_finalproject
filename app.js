@@ -12,6 +12,9 @@ const app = express();
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 
+// Serve static files from public directory
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
@@ -118,6 +121,7 @@ const server = app.listen(port,()=>{
 	console.log(`listening at port : ${port}`);
 
     const db = new sqlite.Database(config.sqlitedb);
+    
     db.run(`
         CREATE TABLE IF NOT EXISTS student_enrollments (
             student_idno VARCHAR(10) NOT NULL,

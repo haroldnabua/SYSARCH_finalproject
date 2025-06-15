@@ -1,0 +1,56 @@
+To run this project, you will need the following software and dependencies:
+
+1. Node.js and npm (Node Package Manager):
+   - Download: Visit the official Node.js website and download the recommended LTS version for your operating system. npm is bundled with Node.js.
+   - Website: https://nodejs.org/en/download/
+
+2. Project Dependencies (Node.js packages):
+   - Express.js: A web application framework for Node.js.
+   - EJS (Embedded JavaScript): A templating engine.
+   - sqlite3: SQLite database driver for Node.js.
+
+   To install these, navigate to the project's root directory in your terminal (where `app.js` is located) and run the following command:
+
+   - npm install express ejs sqlite3
+
+
+3. Database:
+   - This project uses SQLite, which is a self-contained, file-based database. You do not need to install a separate database server. The `sqlite3` npm package will handle database interactions.
+
+Steps to Run the Project:
+
+1. Install Node.js and npm.
+2. Open a terminal or command prompt and navigate to the project's root directory.
+3. Install project dependencies by running:
+
+   - npm install
+
+   (This will install `express`, `ejs`, and `sqlite3` if they are listed in a `package.json` file. If `package.json` is not present or if you want to be explicit, use `npm install express ejs sqlite3` as shown above.)
+4. Start the application by running:
+
+   - node app.js
+
+5. Open your web browser and go to `http://localhost:3000` (or whatever port your `app.js` is configured to use). 
+
+
+-- DOCKER -- 
+# Use the official Node.js image as a base
+FROM node:14
+
+# Set the working directory in the container
+WORKDIR /usr/src/app
+
+# Copy package.json and package-lock.json (if available)
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code
+COPY . .
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Command to run the application
+CMD ["node", "app.js"] 
